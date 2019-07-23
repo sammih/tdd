@@ -7,8 +7,18 @@
   <title>Document</title>
 </head>
 <body>
-  @foreach ($projects as $project)
-      {{ $project->title }}
-  @endforeach
+  <h1 style="text-transform:initial">BirdBoard</h1>
+  <ul>
+    @forelse ($projects as $project)
+
+      <li>
+        <a href="{{ $project->path() }}">{{ $project->title }}</a>
+      </li>
+
+    @empty
+      <p>No projects yet</p>    
+    @endforelse
+  </ul>
+
 </body>
 </html>
