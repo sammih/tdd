@@ -10,17 +10,27 @@ class ProjectsTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
-    public function testOnlyAuthenticatedUserCanCreateProject()
+    public function testGuestCannotCreateProject()
     {
         $attributes = factory('App\Project')->raw();
 
         $this->post('/projects', $attributes)->assertRedirect('login');
     }
 
+    public function testGuestCannotViewProject()
+    {
+        $this->get('/projects')->assertRedirect('login');
+    }
+
+    public function testGuestCannotViewASingleProject()
+    {
+        $project = factory('App\Project')->create();
+
+        $this->get($project->path())->assertRedirect('login');
+    }
+
     public function testUserCanCreateProject()
     {
-        // $this->withoutExceptionHandling();
-
         $this->actingAs(factory('App\User')->create());
 
         $attributes = [
@@ -35,11 +45,13 @@ class ProjectsTest extends TestCase
         $this->get('/projects')->assertSee($attributes['title']);
     }
 
-    public function testUserCanViewProject()
+    public function testUserCanViewTheirProject()
     {
+        $this->be(factory('App\User')->create());
+
         $this->withoutExceptionHandling();
 
-        $project = factory('App\Project')->create();
+        $project = factory('App\Project')->create(['owner_id' => auth()->id()]);
 
         $this->get($project->path())
             ->assertSee($project->title)
