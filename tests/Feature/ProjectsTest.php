@@ -58,6 +58,17 @@ class ProjectsTest extends TestCase
             ->assertSee($project->description);
     }
 
+    public function testAuthenticatedUserCannotSeeTheProjectsOfOthers()
+    {
+        $this->be(factory('App\User')->create());
+
+        // $this->withoutExceptionHandling();
+
+        $project = factory('App\Project')->create();
+
+        $this->get($project->path())->assertStatus(403);
+    }
+
     public function testProjectRequiresATitle()
     {
         $this->actingAs(factory('App\User')->create());
