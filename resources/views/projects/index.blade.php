@@ -9,14 +9,11 @@
     </div>
   </header>
 
-  <main class="flex flex-wrap -mx-3">
+  <main class="lg:flex lg:flex-wrap -mx-3">
     @forelse ($projects as $project)
-    <div class="w-1/3 px-3 pb-6">
-      <div class="bg-white rounded p-5 shadow" style="height:200px">
-        <h3 class="foont-normal text-xl py-4">{{ $project->title }}</h3>
-        <div class="text-grey">{{ str_limit($project->description, 100) }}</div>
+      <div class="lg:w-1/3 px-3 pb-6">
+        @include('projects.card')
       </div>
-    </div>
     @empty
       <div>No projects yet</div>    
     @endforelse
