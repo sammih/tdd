@@ -8,6 +8,13 @@ use Tests\TestCase;
 
 class ProjectTasksTest extends TestCase
 {
+    public function testGuestCannotAddTaskToProject()
+    {
+        $project = factory(Project::class)->create();
+
+        $this->post($project->path() . '/tasks')->assertRedirect('login');
+    }
+
     public function testProjectCanHaveTasks()
     {
         $this->withoutExceptionHandling();
